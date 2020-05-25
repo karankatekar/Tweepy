@@ -1,0 +1,28 @@
+import tweepy
+
+auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
+auth.set_access_token(key, secret)
+
+api = tweepy.API(auth)
+
+account_followers = api.followers_ids('Followers Account')
+my_friends = api.friends_ids('Your Account')
+# print(my_friends)
+user = api.get_user("account_followers")
+print("User details:")
+print(user.name)
+
+i=0
+for follower in account_followers:
+    fol_details = api.get_user(follower)
+    fol = fol_details.id
+    if fol not in my_friends:
+        try:
+            api.create_friendship(fol)
+            print('Followed: '+fol_details.name)
+            i += 1
+            if i == 100:
+                break
+        except:
+            print ("error "+str(IOError))
+            pass
